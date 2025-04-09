@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>at bona official qr cord generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background-color: var(--light);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .tab-btn:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: var(--secondary);
+        }
+        
+        .qr-container {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px dashed #ddd;
+            border-radius: 5px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #qrCode, #imageQrCode, #phoneQrCode {
+            margin-bottom: 20px;
+        }
+        
+        .download-btn {
+            background-color: var(--success);
+            margin-top: 20px;
+        }
+        
+        .download-btn:hover {
+            background-color: #218838;
+        }
+        
+        .instructions {
+            background-color: #e9f5ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 20px 0;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>QR Code Generator</h1>
+            <p class="subtitle">Convert links, images, and phone numbers to QR codes</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="link">Link to QR</button>
+            <button class="tab-btn" data-tab="image">Image to QR</button>
+            <button class="tab-btn" data-tab="phone">Phone to QR</button>
+        </div>
+        
+        <div id="link" class="tab-content active">
+            <div class="instructions">
+                <p>Enter a URL below to generate a QR code that will direct users to that link when scanned.</p>
+            </div>
+            <div class="input-group">
+                <label for="urlInput">Website URL</label>
+                <input type="url" id="urlInput" placeholder="https://example.com">
+            </div>
+            <button id="generateLinkQr">Generate QR Code</button>
+            
+            <div class="qr-container">
+                <div id="qrCode"></div>
+                <button id="downloadLinkQr" class="download-btn" disabled>Download QR Code</button>
+            </div>
+        </div>
+        
+        <div id="image" class="tab-content">
+            <div class="instructions">
+                <p>Upload an image to generate a QR code that will display the image when scanned. Note: The image will be hosted temporarily.</p>
+            </div>
+            <div class="input-group">
+                <label for="imageInput">Select Image</label>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+            <button id="generateImageQr" disabled>Generate QR Code</button>
+            
+            <div class="qr-container">
+                <div id="imageQrCode"></div>
+                <button id="downloadImageQr" class="download-btn" disabled>Download QR Code</button>
+            </div>
+        </div>
+        
+        <div id="phone" class="tab-content">
+            <div class="instructions">
+                <p>Enter a phone number to generate a QR code that will initiate a call when scanned on a mobile device.</p>
+            </div>
+            <div class="input-group">
+                <label for="phoneInput">Phone Number</label>
+                <input type="tel" id="phoneInput" placeholder="+1234567890">
+            </div>
+            <button id="generatePhoneQr">Generate QR Code</button>
+            
+            <div class="qr-container">
+                <div id="phoneQrCode"></div>
+                <button id="downloadPhoneQr" class="download-btn" disabled>Download QR Code</button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>QR Code Generator &copy; <span id="year"></span> | All QR codes are generated client-side</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // Tab functionality
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+                    
+                    // Update active tab button
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Update active tab content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Link to QR
+            const urlInput = document.getElementById('urlInput');
+            const generateLinkQrBtn = document.getElementById('generateLinkQr');
+            const downloadLinkQrBtn = document.getElementById('downloadLinkQr');
+            const qrCodeDiv = document.getElementById('qrCode');
+            
+            generateLinkQrBtn.addEventListener('click', generateLinkQr);
+            
+            function generateLinkQr() {
+                const url = urlInput.value.trim();
+                
+                if (!url) {
+                    alert('Please enter a valid URL');
+                    return;
+                }
+                
+                // Add https:// if not present
+                const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
+                
+                // Generate QR code
+                const qr = qrcode(0, 'L');
+                qr.addData(formattedUrl);
+                qr.make();
+                
+                qrCodeDiv.innerHTML = qr.createImgTag(5);
+                
+                // Enable download button
+                downloadLinkQrBtn.disabled = false;
+                downloadLinkQrBtn.onclick = () => downloadQr(qr, 'link-qr.png');
+            }
+            
+            // Image to QR
+            const imageInput = document.getElementById('imageInput');
+            const generateImageQrBtn = document.getElementById('generateImageQr');
+            const downloadImageQrBtn = document.getElementById('downloadImageQr');
+            const imageQrCodeDiv = document.getElementById('imageQrCode');
+            
+            imageInput.addEventListener('change', function() {
+                generateImageQrBtn.disabled = !this.files || this.files.length === 0;
+            });
+            
+            generateImageQrBtn.addEventListener('click', generateImageQr);
+            
+            function generateImageQr() {
+                const file = imageInput.files[0];
+                
+                if (!file) {
+                    alert('Please select an image file');
+                    return;
+                }
+                
+                // Show loading state
+                imageQrCodeDiv.innerHTML = '<p>Generating QR code...</p>';
+                generateImageQrBtn.disabled = true;
+                generateImageQrBtn.textContent = 'Processing...';
+                
+                // Upload image to a temporary host (in a real app, you'd use a proper backend)
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // In a real application, you would upload the image to a server
+                    // and get a permanent URL. For this demo, we'll use a data URL
+                    // but note that data URLs may be too long for some QR scanners
+                    const imageDataUrl = e.target.result;
+                    
+                    // Generate QR code with the data URL
+                    const qr = qrcode(0, 'L');
+                    qr.addData(imageDataUrl);
+                    qr.make();
+                    
+                    imageQrCodeDiv.innerHTML = qr.createImgTag(5);
+                    
+                    // Enable download button
+                    downloadImageQrBtn.disabled = false;
+                    downloadImageQrBtn.onclick = () => downloadQr(qr, 'image-qr.png');
+                    
+                    generateImageQrBtn.disabled = false;
+                    generateImageQrBtn.textContent = 'Generate QR Code';
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // Phone to QR
+            const phoneInput = document.getElementById('phoneInput');
+            const generatePhoneQrBtn = document.getElementById('generatePhoneQr');
+            const downloadPhoneQrBtn = document.getElementById('downloadPhoneQr');
+            const phoneQrCodeDiv = document.getElementById('phoneQrCode');
+            
+            generatePhoneQrBtn.addEventListener('click', generatePhoneQr);
+            
+            function generatePhoneQr() {
+                const phoneNumber = phoneInput.value.trim();
+                
+                if (!phoneNumber) {
+                    alert('Please enter a phone number');
+                    return;
+                }
+                
+                // Format as tel: link
+                const telLink = `tel:${phoneNumber}`;
+                
+                // Generate QR code
+                const qr = qrcode(0, 'L');
+                qr.addData(telLink);
+                qr.make();
+                
+                phoneQrCodeDiv.innerHTML = qr.createImgTag(5);
+                
+                // Enable download button
+                downloadPhoneQrBtn.disabled = false;
+                downloadPhoneQrBtn.onclick = () => downloadQr(qr, 'phone-qr.png');
+            }
+            
+            // Download QR code
+            function downloadQr(qr, filename) {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const size = qr.getModuleCount() * 5;
+                
+                canvas.width = size;
+                canvas.height = size;
+                
+                // Draw QR code on canvas
+                for (let row = 0; row < qr.getModuleCount(); row++) {
+                    for (let col = 0; col < qr.getModuleCount(); col++) {
+                        ctx.fillStyle = qr.isDark(row, col) ? '#000000' : '#ffffff';
+                        ctx.fillRect(col * 5, row * 5, 5, 5);
+                    }
+                }
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        });
+    </script>
+</body>
+</html>
